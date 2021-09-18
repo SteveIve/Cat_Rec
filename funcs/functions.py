@@ -1,3 +1,4 @@
+import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
@@ -162,7 +163,22 @@ def model(X_train, Y_train, X_test, Y_test,
         "num_iterations": num_iterations
     }
 
-    print("train accuracy: {} %".format(100-np.mean(np.abs(Y_prediction_train - Y_train)) * 100))
-    print("test accuracy: {} %".format(100-np.mean(np.abs(Y_prediction_test - Y_test)) * 100))
+    print("train accuracy: {} %".format(100 - np.mean(np.abs(Y_prediction_train - Y_train)) * 100))
+    print("test accuracy: {} %".format(100 - np.mean(np.abs(Y_prediction_test - Y_test)) * 100))
 
     return d
+
+
+def guess(filename, num_px, d):
+    fname = "images/" + filename
+    image = np.array(matplotlib.image.imread(fname))  # image will be flatted later
+    my_image = np.array(Image.fromarray(image).resize((num_px, num_px))).reshape((num_px * num_px * 3, 1))
+    my_predicted_image = predict(d["w"], d["b"], my_image)
+    plt.imshow(image)
+    if np.squeeze(my_predicted_image) == 1:
+        print("Christopher: 计算出y = " + str(np.squeeze(my_predicted_image)) + ", 这显然是一只猫咪")
+    else:
+        print("Christopher: 计算出y = " + str(np.squeeze(my_predicted_image)) + ", 不太像一只猫咪")
+
+    plt.show()
+
